@@ -1,6 +1,6 @@
 import os, uuid
 from flask import Blueprint, request, send_file, jsonify
-from engine import process_video_task
+from engine import process_media_task
 
 bp = Blueprint("processor", __name__)
 BASE_TEMP = "/tmp/kayan_jobs"
@@ -8,19 +8,23 @@ os.makedirs(BASE_TEMP, exist_ok=True)
 
 @bp.route("/process", methods=["POST"])
 def process_media():
-    if "file" not in request.files:
-        return jsonify({"error": "يرجى اختيار ملف فيديو أولاً"}), 400
-    file = request.files["file"]
-    mode = request.form.get("mode", "svga")
+    files = request.files.getlist("files")
+    if not files or not files[0].filename:
+        return jsonify({"error": "يرجى اختيار ملف واحد على الأقل"}), 400
+    mode = request.form.get("mode", "images_svga")
+    remove_bg = request.form.get("remove_bg") == "true"
     tolerance = int(request.form.get("tolerance", 45))
-    job_id = str(uuid.uuid4())
-    job_dir = os.path.join(BASE_TEMP, job_id)
+    job_dir = os.path.join(BASE_TEMP, str(uuid.uuid4()))
     os.makedirs(job_dir, exist_ok=True)
-    input_path = os.path.join(job_dir, "input_video.mp4")
-    file.save(input_path)
+    paths = []
+    for idx, f in enumerate(files):
+        ext = os.path.splitext(f.filename)[1] or ".png"
+        p = os.path.join(job_dir, f"in_{idx}{ext}")
+        f.save(p)
+        paths.append(p)
     try:
-        output_path = process_video_task(input_path, job_dir, mode=mode, tolerance=tolerance)
-        download_name = "Kayan_Transparent.webm" if mode == "video_only" else "Kayan_Animation.svga"
-        return send_file(output_path, as_attachment=True, download_name=download_name)
+        out = process_media_task(paths, job_dir, mode=mode, remove_bg=remove_bg, tolerance=tolerance)
+        name = "Kayan_Transparent.webm" if mode == "video_only" else "Kayan_Animation.svga"
+        return send_file(out, as_attachment=True, download_name=name)
     except Exception as e:
-        return jsonify({"error": f"خطأ: {str(e)}"}), 500
+        return jsonify({"error": str(e)}), 500

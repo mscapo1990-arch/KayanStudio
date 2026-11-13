@@ -4,72 +4,8 @@ from processor import bp
 app = Flask(__name__)
 app.register_blueprint(bp)
 
-HTML_PAGE = """
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>استوديو كيان - SVGA وتفريغ الفيديو</title>
-    <style>
-        body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .card { background: #1e293b; border-radius: 16px; padding: 24px; width: 100%; max-width: 450px; border: 1px solid #334155; }
-        h1 { font-size: 22px; text-align: center; color: #38bdf8; margin-bottom: 8px; }
-        p.sub { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
-        .box { border: 2px dashed #475569; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 18px; background: #0f172a; }
-        .box input { width: 100%; color: #cbd5e1; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
-        select, input[type="range"] { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 15px; margin-bottom: 18px; box-sizing: border-box; }
-        button { width: 100%; padding: 14px; border: none; border-radius: 12px; background: linear-gradient(135deg, #0284c7, #6366f1); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button:disabled { opacity: 0.6; }
-        #status { margin-top: 16px; text-align: center; font-size: 14px; color: #38bdf8; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>استوديو كيان الذكي</h1>
-        <p class="sub">تفريغ جميع ألوان الخلفيات وتصدير SVGA 2.0 قياسي</p>
-        <form id="uploadForm">
-            <label>1. اختر الفيديو من هاتفك:</label>
-            <div class="box"><input type="file" id="videoFile" name="file" accept="video/*" required></div>
-            <label>2. اختر نوع المعالجة المطلوبة:</label>
-            <select name="mode" id="mode">
-                <option value="svga">تحويل إلى ملف SVGA 2.0 (بدون خلفية)</option>
-                <option value="video_only">حذف خلفية الفيديو فقط (تصدير فيديو شفاف WebM)</option>
-            </select>
-            <label>3. دقة عزل الخلفية (الحساسية: <span id="tolVal">45</span>):</label>
-            <input type="range" name="tolerance" id="tolerance" min="15" max="90" value="45" oninput="document.getElementById('tolVal').innerText=this.value">
-            <button type="submit" id="submitBtn">بدء المعالجة والتحميل</button>
-        </form>
-        <div id="status"></div>
-    </div>
-    <script>
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const status = document.getElementById('status');
-            btn.disabled = true;
-            status.innerText = "جاري تحليل الإطارات وعزل الخلفية... يرجى الانتظار";
-            const formData = new FormData(e.target);
-            try {
-                const res = await fetch('/process', { method: 'POST', body: formData });
-                if (!res.ok) { const err = await res.json(); throw new Error(err.error || "فشلت المعالجة"); }
-                const blob = await res.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                const mode = document.getElementById('mode').value;
-                a.download = mode === 'video_only' ? 'Kayan_Transparent.webm' : 'Kayan_Animation.svga';
-                document.body.appendChild(a); a.click(); a.remove();
-                status.innerText = "✅ تم التصدير بنجاح!";
-            } catch (err) { status.innerText = "❌ " + err.message; }
-            finally { btn.disabled = false; }
-        };
-    </script>
-</body>
-</html>
-"""
+HTML = """<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>استوديو كيان</title><style>body{font-family:system-ui;background:#0f172a;color:#fff;margin:0;padding:16px;display:flex;justify-content:center}.card{background:#1e293b;border-radius:16px;padding:20px;width:100%;max-width:440px;border:1px solid #334155}h1{font-size:20px;text-align:center;color:#38bdf8;margin:0 0 16px}.tabs{display:flex;gap:8px;margin-bottom:16px}.tab{flex:1;padding:10px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#94a3b8;text-align:center;cursor:pointer;font-weight:bold;font-size:13px}.tab.active{background:#0284c7;color:#fff;border-color:#38bdf8}.box{border:2px dashed #475569;border-radius:12px;padding:18px;text-align:center;margin-bottom:14px;background:#0f172a}label{display:block;margin-bottom:6px;font-weight:bold;font-size:13px}select,input[type=range]{width:100%;padding:10px;border-radius:10px;border:1px solid #475569;background:#0f172a;color:#fff;margin-bottom:14px;box-sizing:border-box}.chk{background:#0f172a;padding:12px;border-radius:10px;margin-bottom:14px;border:1px solid #334155}button{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#0284c7,#6366f1);color:#fff;font-size:15px;font-weight:bold;cursor:pointer}button:disabled{opacity:.6}#status{margin-top:14px;text-align:center;font-size:14px;color:#38bdf8}</style></head><body><div class="card"><h1>استوديو كيان الذكي</h1><div class="tabs"><div class="tab active" id="tImg" onclick="sw('img')">🖼️ تحويل الصور إلى SVGA</div><div class="tab" id="tVid" onclick="sw('vid')">🎬 معالجة الفيديو</div></div><form id="f"><input type="hidden" name="mode" id="mIn" value="images_svga"><label id="fLbl">1. اختر صورة أو عدة صور (PNG, JPG, WEBP, GIF):</label><div class="box"><input type="file" id="files" name="files" accept="image/*" multiple required></div><div id="vOpts" style="display:none"><label>2. نوع المعالجة:</label><select id="vSel" onchange="document.getElementById('mIn').value=this.value"><option value="svga">تحويل الفيديو إلى SVGA 2.0</option><option value="video_only">حذف خلفية الفيديو فقط (WebM شفاف)</option></select></div><div class="chk"><label style="cursor:pointer"><input type="checkbox" id="bgChk" checked onchange="document.getElementById('tBox').style.display=this.checked?'block':'none'"> تفريغ الخلفية تلقائياً (كل الألوان)</label><div id="tBox" style="margin-top:10px"><label>دقة العزل (<span id="tv">45</span>):</label><input type="range" name="tolerance" min="15" max="90" value="45" oninput="document.getElementById('tv').innerText=this.value"></div></div><button type="submit" id="btn">تحويل وتنزيل الملف</button></form><div id="status"></div></div><script>function sw(t){const fi=document.getElementById('files'),vo=document.getElementById('vOpts'),mi=document.getElementById('mIn'),fl=document.getElementById('fLbl');if(t==='img'){document.getElementById('tImg').classList.add('active');document.getElementById('tVid').classList.remove('active');fi.accept='image/*';fi.multiple=true;vo.style.display='none';mi.value='images_svga';fl.innerText='1. اختر صورة أو عدة صور (PNG, JPG, WEBP, GIF):'}else{document.getElementById('tVid').classList.add('active');document.getElementById('tImg').classList.remove('active');fi.accept='video/*';fi.multiple=false;vo.style.display='block';mi.value=document.getElementById('vSel').value;fl.innerText='1. اختر ملف الفيديو:'}fi.value=''}document.getElementById('f').onsubmit=async e=>{e.preventDefault();const b=document.getElementById('btn'),s=document.getElementById('status');b.disabled=true;s.innerText='جاري التحويل... يرجى الانتظار';const fd=new FormData(e.target);fd.append('remove_bg',document.getElementById('bgChk').checked?'true':'false');try{const r=await fetch('/process',{method:'POST',body:fd});if(!r.ok){const er=await r.json();throw new Error(er.error||'خطأ')}const bl=await r.blob(),u=URL.createObjectURL(bl),a=document.createElement('a');a.href=u;a.download=document.getElementById('mIn').value==='video_only'?'Kayan_Transparent.webm':'Kayan_Animation.svga';document.body.appendChild(a);a.click();a.remove();s.innerText='✅ تم التحويل والتنزيل بنجاح!'}catch(err){s.innerText='❌ '+err.message}finally{b.disabled=false}}</script></body></html>"""
 
 @app.route("/")
 def index():
-    return render_template_string(HTML_PAGE)
+    return render_template_string(HTML)
