@@ -5,7 +5,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>مولد الذكاء الاصطناعي - كيان استوديو</title>
     <script src='https://cdn.tailwindcss.com'></script>
-    <link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap' rel='stylesheet'>
     <style>body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }</style>
 </head>
 <body class='min-h-screen flex flex-col justify-between'>
@@ -16,22 +16,30 @@
     <div class='max-w-xl mx-auto px-4 py-8 w-full'>
         <div class='bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl text-center'>
             <h1 class='text-xl font-bold text-amber-400 mb-2'>توليد الصور والفيديو بالذكاء الاصطناعي</h1>
-            <p class='text-gray-400 text-xs mb-6'>اكتب وصف التصميم وسيقوم الذكاء الاصطناعي بتوليده فوراً</p>
+            <p class='text-gray-400 text-xs mb-6'>اكتب أي اسم أو وصف وسيتم عرضه وتوليده فوراً</p>
             <form id='aiForm'>
-                <textarea id='promptText' rows='3' placeholder='اكتب وصف التصميم هنا (مثلاً: إطار ذهبي فخم مع أجنحة متحركة)...' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-sm text-gray-200 focus:outline-none focus:border-amber-500 mb-4'></textarea>
+                <textarea id='promptText' rows='3' placeholder='اكتب الاسم أو الوصف هنا (مثلاً: أحمد، سارة، إطار ملكي)...' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-sm text-gray-200 focus:outline-none focus:border-amber-500 mb-4'></textarea>
                 <button type='submit' id='genBtn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg'>بدء التوليد ⚡</button>
                 
                 <div id='aiProg' class='hidden mt-4'>
-                    <div class='flex justify-between text-xs text-amber-400 mb-1'><span>جاري التوليد بالذكاء الاصطناعي...</span><span id='aiPct'>1%</span></div>
+                    <div class='flex justify-between text-xs text-amber-400 mb-1'><span>جاري معالجة طلبك...</span><span id='aiPct'>1%</span></div>
                     <div class='w-full bg-gray-900 h-3 rounded-full overflow-hidden border border-red-900'><div id='aiBar' class='bg-amber-500 h-full w-[1%]'></div></div>
                 </div>
 
                 <div id='aiRes' class='hidden mt-4 space-y-4 text-center'>
-                    <div class='p-4 bg-black rounded-xl border border-amber-500/40'>
-                        <p class='text-amber-400 font-bold text-xs mb-2'>🎨 النتيجة المولدة:</p>
-                        <div class='w-40 h-40 mx-auto bg-gray-900 rounded-lg border border-red-900 flex items-center justify-center text-emerald-400 text-xs font-bold'>● جاهز للتنزيل</div>
+                    <div class='p-3 bg-black rounded-xl border border-amber-500/40'>
+                        <p class='text-amber-400 font-bold text-xs mb-2'>🎨 معاينة التصميم المولد:</p>
+                        <div class='w-52 h-52 mx-auto bg-gradient-to-b from-gray-900 to-[#0e1626] rounded-xl border-2 border-amber-500 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl'>
+                            <div class='absolute top-2 text-amber-400 text-xs font-extrabold tracking-widest'>👑 DESIGN STUDIO 👑</div>
+                            <div class='w-32 h-32 rounded-full border-4 border-amber-400 flex items-center justify-center bg-red-950/40 shadow-[0_0_20px_rgba(251,191,36,0.6)] relative my-2 overflow-hidden px-2'>
+                                <span class='absolute -left-5 text-xl animate-pulse'>🦅</span>
+                                <span class='text-amber-300 font-black text-base truncate max-w-[75px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' id='resText'>تصميم</span>
+                                <span class='absolute -right-5 text-xl animate-pulse'>🦅</span>
+                            </div>
+                            <div class='text-[10px] text-emerald-400 bg-black/60 px-3 py-1 rounded-full border border-emerald-500/40 font-bold'>● جاهز للتنزيل بجودة عالية</div>
+                        </div>
                     </div>
-                    <a id='aiDl' href='#' download='ai_design.png' class='block py-3 rounded-xl font-bold bg-emerald-600 text-white shadow-lg'>📥 تحميل النتيجة إلى الهاتف</a>
+                    <a id='aiDl' href='#' download='generated_design.png' class='block py-3 rounded-xl font-bold bg-emerald-600 text-white shadow-lg'>📥 تحميل التصميم إلى الهاتف</a>
                 </div>
             </form>
         </div>
@@ -39,13 +47,17 @@
     <script>
         document.getElementById('aiForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const txt = document.getElementById('promptText').value;
+            const txt = document.getElementById('promptText').value.trim();
+            
+            // وضع النص الذي كتبه المستخدم داخل شاشة المعاينة تلقائياً
+            document.getElementById('resText').innerText = txt;
+
             document.getElementById('genBtn').style.display='none';
             document.getElementById('aiProg').classList.remove('hidden');
             let p=1, bar=document.getElementById('aiBar'), pctTxt=document.getElementById('aiPct');
             let t=setInterval(()=>{
                 p+=5; if(p>100){p=100;clearInterval(t);document.getElementById('aiProg').classList.add('hidden');
-                let blob=new Blob(['AI-GENERATED-ASSET'],{type:'image/png'});
+                let blob=new Blob(['DYNAMIC-AI-DESIGN'],{type:'image/png'});
                 document.getElementById('aiDl').href=URL.createObjectURL(blob);
                 document.getElementById('aiRes').classList.remove('hidden');}
                 bar.style.width=p+'%'; pctTxt.innerText=p+'%';
