@@ -15,31 +15,25 @@
     </header>
     <div class='max-w-xl mx-auto px-4 py-8 w-full'>
         <div class='bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl text-center'>
-            <h1 class='text-xl font-bold text-amber-400 mb-2'>توليد الصور والفيديو بالذكاء الاصطناعي</h1>
-            <p class='text-gray-400 text-xs mb-6'>اكتب أي اسم أو وصف وسيتم عرضه وتوليده فوراً</p>
+            <h1 class='text-xl font-bold text-amber-400 mb-2'>توليد الصور بالذكاء الاصطناعي (Gemini Engine)</h1>
+            <p class='text-gray-400 text-xs mb-6'>اكتب وصف التصميم وسيقوم الذكاء الاصطناعي برسمه وتوليده فوراً</p>
             <form id='aiForm'>
-                <textarea id='promptText' rows='3' placeholder='اكتب الاسم أو الوصف هنا (مثلاً: أحمد، سارة، إطار ملكي)...' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-sm text-gray-200 focus:outline-none focus:border-amber-500 mb-4'></textarea>
-                <button type='submit' id='genBtn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg'>بدء التوليد ⚡</button>
+                <textarea id='promptText' rows='3' placeholder='اكتب وصف التصميم هنا بالإنجليزية أو العربية (مثلاً: Luxury golden badge with wings)...' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-sm text-gray-200 focus:outline-none focus:border-amber-500 mb-4'></textarea>
+                <button type='submit' id='genBtn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg'>بدء التوليد الذكي ⚡</button>
                 
                 <div id='aiProg' class='hidden mt-4'>
-                    <div class='flex justify-between text-xs text-amber-400 mb-1'><span>جاري معالجة طلبك...</span><span id='aiPct'>1%</span></div>
+                    <div class='flex justify-between text-xs text-amber-400 mb-1'><span>جاري توليد الصورة بالذكاء الاصطناعي...</span><span id='aiPct'>1%</span></div>
                     <div class='w-full bg-gray-900 h-3 rounded-full overflow-hidden border border-red-900'><div id='aiBar' class='bg-amber-500 h-full w-[1%]'></div></div>
                 </div>
 
                 <div id='aiRes' class='hidden mt-4 space-y-4 text-center'>
                     <div class='p-3 bg-black rounded-xl border border-amber-500/40'>
-                        <p class='text-amber-400 font-bold text-xs mb-2'>🎨 معاينة التصميم المولد:</p>
-                        <div class='w-52 h-52 mx-auto bg-gradient-to-b from-gray-900 to-[#0e1626] rounded-xl border-2 border-amber-500 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl'>
-                            <div class='absolute top-2 text-amber-400 text-xs font-extrabold tracking-widest'>👑 DESIGN STUDIO 👑</div>
-                            <div class='w-32 h-32 rounded-full border-4 border-amber-400 flex items-center justify-center bg-red-950/40 shadow-[0_0_20px_rgba(251,191,36,0.6)] relative my-2 overflow-hidden px-2'>
-                                <span class='absolute -left-5 text-xl animate-pulse'>🦅</span>
-                                <span class='text-amber-300 font-black text-base truncate max-w-[75px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' id='resText'>تصميم</span>
-                                <span class='absolute -right-5 text-xl animate-pulse'>🦅</span>
-                            </div>
-                            <div class='text-[10px] text-emerald-400 bg-black/60 px-3 py-1 rounded-full border border-emerald-500/40 font-bold'>● جاهز للتنزيل بجودة عالية</div>
+                        <p class='text-amber-400 font-bold text-xs mb-2'>🎨 الصورة المولدة بالذكاء الاصطناعي:</p>
+                        <div class='w-64 h-64 mx-auto bg-gray-900 rounded-xl border-2 border-amber-500 flex items-center justify-center relative overflow-hidden shadow-2xl'>
+                            <img id='aiGeneratedImg' class='w-full h-full object-cover' alt='الصورة المولدة'>
                         </div>
                     </div>
-                    <a id='aiDl' href='#' download='generated_design.png' class='block py-3 rounded-xl font-bold bg-emerald-600 text-white shadow-lg'>📥 تحميل التصميم إلى الهاتف</a>
+                    <a id='aiDl' href='#' target='_blank' download='ai_generated_image.png' class='block py-3 rounded-xl font-bold bg-emerald-600 text-white shadow-lg'>📥 تحميل الصورة بدقة عالية</a>
                 </div>
             </form>
         </div>
@@ -47,21 +41,36 @@
     <script>
         document.getElementById('aiForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const txt = document.getElementById('promptText').value.trim();
+            const prompt = document.getElementById('promptText').value.trim();
             
-            // وضع النص الذي كتبه المستخدم داخل شاشة المعاينة تلقائياً
-            document.getElementById('resText').innerText = txt;
-
             document.getElementById('genBtn').style.display='none';
             document.getElementById('aiProg').classList.remove('hidden');
             let p=1, bar=document.getElementById('aiBar'), pctTxt=document.getElementById('aiPct');
+            
             let t=setInterval(()=>{
-                p+=5; if(p>100){p=100;clearInterval(t);document.getElementById('aiProg').classList.add('hidden');
-                let blob=new Blob(['DYNAMIC-AI-DESIGN'],{type:'image/png'});
-                document.getElementById('aiDl').href=URL.createObjectURL(blob);
-                document.getElementById('aiRes').classList.remove('hidden');}
-                bar.style.width=p+'%'; pctTxt.innerText=p+'%';
-            },30);
+                p+=4; 
+                if(p>95){clearInterval(t);}
+                bar.style.width=p+'%'; 
+                pctTxt.innerText=p+'%';
+            },50);
+
+            // توليد الصورة الحقيقية عبر واجهة الذكاء الاصطناعي
+            const encodedPrompt = encodeURIComponent(prompt);
+            const imageUrl = ;
+            
+            const imgElement = document.getElementById('aiGeneratedImg');
+            imgElement.onload = function() {
+                clearInterval(t);
+                bar.style.width='100%';
+                pctTxt.innerText='100%';
+                setTimeout(()=>{
+                    document.getElementById('aiProg').classList.add('hidden');
+                    document.getElementById('aiDl.href')
+                    document.getElementById('aiDl').href = imageUrl;
+                    document.getElementById('aiRes').classList.remove('hidden');
+                }, 500);
+            };
+            imgElement.src = imageUrl;
         });
     </script>
 </body>
