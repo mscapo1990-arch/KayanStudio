@@ -27,14 +27,26 @@
                 <h1 class="text-2xl font-bold mb-2">محول صيغ الصور المتعددة إلى SVGA</h1>
                 <p class="text-gray-400 text-sm">قم برفع أي صورة (PNG, JPG, WEBP, GIF) ليتم تحويلها ومعالجتها فورا</p>
             </div>
-            <div class="border-2 border-dashed border-gray-700 hover:border-amber-500/50 rounded-2xl p-8 text-center cursor-pointer transition mb-6 bg-[#0e1626]">
-                <span class="text-3xl mb-2 block">📁</span>
-                <p class="text-sm font-semibold text-gray-300">اضغط لاختيار الصور أو اسحبها هنا</p>
-                <p class="text-xs text-gray-500 mt-1">تدعم كافة الصيغ الشهيرة بجودة عالية</p>
-            </div>
-            <button class="gold-btn w-full py-3 rounded-xl text-base shadow-lg">بدء التحويل الآن ⚡</button>
+            
+            <form action="/convert" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-amber-500/50 rounded-2xl p-8 text-center cursor-pointer transition mb-6 bg-[#0e1626]">
+                    <span class="text-3xl mb-2 block">📁</span>
+                    <p id="fileName" class="text-sm font-semibold text-gray-300">اضغط لاختيار الصور أو اسحبها هنا</p>
+                    <p class="text-xs text-gray-500 mt-1">تدعم كافة الصيغ الشهيرة بجودة عالية</p>
+                    <input type="file" name="image" id="fileInput" class="hidden" accept="image/*" onchange="showFileName(this)">
+                </div>
+                <button type="submit" class="gold-btn w-full py-3 rounded-xl text-base shadow-lg cursor-pointer">بدء التحويل الآن ⚡</button>
+            </form>
         </div>
     </main>
     <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">جميع الحقوق محفوظة © كيان استوديو 2026</footer>
+    
+    <script>
+        function showFileName(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('fileName').innerText = "الملف المختار: " + input.files[0].name;
+            }
+        }
+    </script>
 </body>
 </html>
