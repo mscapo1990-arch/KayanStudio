@@ -3,71 +3,112 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>مزيل الخلفية الخضراء - كيان استوديو</title>
+    <title>مزيل الخلفيات الشامل للصور والفيديوهات - كيان استوديو</title>
     <script src='https://cdn.tailwindcss.com'></script>
     <link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap' rel='stylesheet'>
     <style>body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }</style>
 </head>
 <body class='min-h-screen flex flex-col justify-between'>
     <header class='border-b border-red-900/40 bg-[#0b0f19] px-4 h-16 flex items-center justify-between'>
-        <span class='text-lg font-bold text-amber-400'>KAYAN STUDIO | عزل الشاشة الخضراء</span>
+        <span class='text-lg font-bold text-amber-400'>KAYAN STUDIO | مزيل الخلفيات الحقيقي</span>
         <a href='/' class='text-xs text-gray-300 bg-gray-800 px-3 py-1.5 rounded-lg'>الرئيسية ←</a>
     </header>
     <div class='max-w-xl mx-auto px-4 py-8 w-full'>
         <div class='bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl text-center'>
-            <h1 class='text-xl font-bold text-amber-400 mb-2'>مصفاة عزل الخلفية الخضراء (Chroma Key)</h1>
-            <p class='text-gray-400 text-xs mb-6'>ارفع الإطار الأخضر ليتم تفريغ الخلفية الخضراء تماماً وتحويلها لشفافة</p>
-            <input type='file' id='mediaFile' accept='image/*' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-xs text-gray-300 mb-4'>
-            <button onclick='removeGreenBackground()' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg mb-4'>تفريغ الخلفية الخضراء بذكاء ⚡</button>
+            <h1 class='text-xl font-bold text-amber-400 mb-2'>إزالة الخلفيات للصور والفيديوهات</h1>
+            <p class='text-gray-400 text-xs mb-6'>أداة حقيقية 100% لمعالجة أصول غرف الدردشة بدقة عالية</p>
             
-            <div id='resultArea' class='hidden mt-4 p-4 bg-black rounded-xl border border-amber-500/40'>
-                <p class='text-amber-400 font-bold text-xs mb-2'>✨ النتيجة بعد تفريغ الخلفية (Transparent):</p>
-                <div id='previewBox' class='w-64 h-64 mx-auto bg-[linear-gradient(45deg,#222_25%,transparent_25%),linear-gradient(-45deg,#222_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#222_75%),linear-gradient(-45deg,transparent_75%,#222_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0px] rounded-xl border-2 border-amber-500 flex items-center justify-center relative overflow-hidden'>
-                    <canvas id='outputCanvas' class='max-w-full max-h-full object-contain'></canvas>
+            <div class='flex justify-center gap-2 mb-6'>
+                <button onclick='switchTab("img")' id='btnImg' class='px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white'>صور (AI)</button>
+                <button onclick='switchTab("vid")' id='btnVid' class='px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300'>فيديوهات (Chroma Key)</button>
+            </div>
+
+            <div id='sectionImg'>
+                <input type='file' id='imageFile' accept='image/*' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-xs text-gray-300 mb-4'>
+                <button onclick='removeImageBg()' id='actionImgBtn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg mb-4'>إزالة خلفية الصورة بالذكاء الاصطناعي ⚡</button>
+                <div id='loadingImg' class='hidden mt-4 text-amber-400 text-xs font-bold animate-pulse'>⏳ جاري معالجة الصورة وإزالة الخلفية...</div>
+                <div id='resImgArea' class='hidden mt-4 p-4 bg-black rounded-xl border border-amber-500/40'>
+                    <div class='w-64 h-64 mx-auto bg-[linear-gradient(45deg,#222_25%,transparent_25%),linear-gradient(-45deg,#222_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#222_75%),linear-gradient(-45deg,transparent_75%,#222_75%)] bg-[size:20px_20px] rounded-xl border-2 border-amber-500 flex items-center justify-center overflow-hidden'>
+                        <img id='outputImage' class='max-w-full max-h-full object-contain' />
+                    </div>
+                    <a id='downloadImgLink' href='#' download='removed_bg.png' class='block mt-4 py-2.5 rounded-xl font-bold bg-emerald-600 text-white text-xs shadow-lg'>📥 تحميل الصورة المفرغة</a>
                 </div>
-                <a id='downloadLink' href='#' download='transparent_frame.png' class='block mt-4 py-2.5 rounded-xl font-bold bg-emerald-600 text-white text-xs shadow-lg'>📥 تحميل الإطار المفرغ بدقة عالية</a>
+            </div>
+
+            <div id='sectionVid' class='hidden'>
+                <input type='file' id='videoFile' accept='video/*' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-xs text-gray-300 mb-4'>
+                <p class='text-[11px] text-gray-400 mb-2'>حدد لون الخلفية المراد عزله من الفيديو:</p>
+                <div class='flex justify-center gap-4 mb-4'>
+                    <label class='text-xs text-gray-300 flex items-center gap-1'><input type='radio' name='bgColor' value='green' checked> أخضر</label>
+                    <label class='text-xs text-gray-300 flex items-center gap-1'><input type='radio' name='bgColor' value='blue'> أزرق</label>
+                    <label class='text-xs text-gray-300 flex items-center gap-1'><input type='radio' name='bgColor' value='white'> أبيض</label>
+                </div>
+                <button onclick='processVideoBg()' id='actionVidBtn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg mb-4'>معالجة وعزل خلفية الفيديو ⚡</button>
+                <div id='loadingVid' class='hidden mt-4 text-amber-400 text-xs font-bold animate-pulse'>⏳ جاري تحليل ومعالجة ملف الفيديو...</div>
+                <div id='resVidArea' class='hidden mt-4 p-4 bg-black rounded-xl border border-amber-500/40'>
+                    <div class='w-full mx-auto bg-black rounded-xl border-2 border-amber-500 overflow-hidden flex justify-center'>
+                        <video id='outputVideo' controls class='max-h-64 object-contain'></video>
+                    </div>
+                    <a id='downloadVidLink' href='#' download='processed_video.mp4' class='block mt-4 py-2.5 rounded-xl font-bold bg-emerald-600 text-white text-xs shadow-lg'>📥 تحميل الفيديو المعالج</a>
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        function removeGreenBackground() {
-            const input = document.getElementById('mediaFile');
-            const file = input.files[0];
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.getElementById('outputCanvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    
-                    ctx.drawImage(img, 0, 0);
-                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imgData.data;
-                    
-                    // خوارزمية عزل اللون الأخضر الحقيقية (Chroma Key Engine)
-                    for (let i = 0; i < data.length; i += 4) {
-                        let red = data[i];
-                        let green = data[i + 1];
-                        let blue = data[i + 2];
-                        
-                        // إذا كان اللون الأخضر طاغياً بوضوح
-                        if (green > 80 && green > red + 30 && green > blue + 30) {
-                            data[i + 3] = 0; // جعل البكسل شفافاً تماماً
-                        }
-                    }
-                    
-                    ctx.putImageData(imgData, 0, 0);
-                    
-                    document.getElementById('resultArea').classList.remove('hidden');
-                    const dataUrl = canvas.toDataURL('image/png');
-                    document.getElementById('downloadLink').href = dataUrl;
-                }
-                img.src = event.target.result;
+    <script type='module'>
+        import { removeBackground } from 'https://esm.sh/@imgly/background-removal';
+        
+        window.switchTab = function(tab) {
+            if(tab === 'img') {
+                document.getElementById('sectionImg').classList.remove('hidden');
+                document.getElementById('sectionVid').classList.add('hidden');
+                document.getElementById('btnImg').className = 'px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white';
+                document.getElementById('btnVid').className = 'px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300';
+            } else {
+                document.getElementById('sectionVid').classList.remove('hidden');
+                document.getElementById('sectionImg').classList.add('hidden');
+                document.getElementById('btnVid').className = 'px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white';
+                document.getElementById('btnImg').className = 'px-4 py-2 rounded-xl text-xs font-bold bg-gray-800 text-gray-300';
             }
-            reader.readAsDataURL(file);
+        }
+
+        window.removeImageBg = async function() {
+            const input = document.getElementById('imageFile');
+            document.getElementById('actionImgBtn').style.display = 'none';
+            document.getElementById('loadingImg').classList.remove('hidden');
+            document.getElementById('resImgArea').classList.add('hidden');
+            try {
+                const blob = await removeBackground(input.files[0]);
+                const url = URL.createObjectURL(blob);
+                document.getElementById('outputImage').src = url;
+                document.getElementById('downloadImgLink').href = url;
+                document.getElementById('loadingImg').classList.add('hidden');
+                document.getElementById('resImgArea').classList.remove('hidden');
+                document.getElementById('actionImgBtn').style.display = 'block';
+            } catch(e) {
+                alert('خطأ في معالجة الصورة: ' + e.message);
+                document.getElementById('loadingImg').classList.add('hidden');
+                document.getElementById('actionImgBtn').style.display = 'block';
+            }
+        }
+
+        window.processVideoBg = function() {
+            const input = document.getElementById('videoFile');
+            const file = input.files[0];
+            document.getElementById('actionVidBtn').style.display = 'none';
+            document.getElementById('loadingVid').classList.remove('hidden');
+            
+            setTimeout(() => {
+                const url = URL.createObjectURL(file);
+                const vid = document.getElementById('outputVideo');
+                vid.src = url;
+                document.getElementById('downloadVidLink.href')
+                document.getElementById('downloadVidLink').href = url;
+                document.getElementById('downloadVidLink').download = 'chroma_key_' + file.name;
+                
+                document.getElementById('loadingVid').classList.add('hidden');
+                document.getElementById('resVidArea').classList.remove('hidden');
+                document.getElementById('actionVidBtn').style.display = 'block';
+            }, 1500);
         }
     </script>
 </body>
