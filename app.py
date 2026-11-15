@@ -1,30 +1,17 @@
-from flask import Flask, render_template, request
-
+from flask import Flask, render_template
 app = Flask(__name__)
-
 @app.route('/')
-def home():
-    return render_template('index.html')
-
+def home(): return render_template('index.html')
 @app.route('/converter')
-def converter():
-    return render_template('converter.html')
-
-@app.route('/player')
-def player():
-    return render_template('player.html')
-
-@app.route('/extractor')
-def extractor():
-    return render_template('extractor.html')
-
+def converter(): return render_template('converter.html')
+@app.route('/bg_remover')
+def bg_remover(): return render_template('bg_remover.html')
+@app.route('/svga_player')
+def svga_player(): return render_template('svga_player.html')
+@app.route('/ai_generator')
+def ai_generator(): return render_template('ai_generator.html')
 @app.route('/animator')
-def animator():
-    return render_template('animator.html')
-
-@app.route('/convert', methods=['POST'])
-def convert():
-    return "تم الاستلام والمعالجة بنجاح"
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+def animator(): return render_template('animator.html')
+@app.route('/extractor')
+def extractor(): return render_template('extractor.html')
+if __name__ == '__main__': app.run(host='0.0.0.0', port=5000, debug=True)
