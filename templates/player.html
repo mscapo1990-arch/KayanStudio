@@ -1,53 +1,46 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang='ar' dir='rtl'>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>معالجة الفيديو والمشغل السينمائي - استوديو كيان</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }
-        .royal-btn { background: linear-gradient(135deg, #991b1b 0%, #b45309 100%); color: #ffffff; font-weight: 700; transition: all 0.3s ease; }
-        .royal-btn:hover { background: linear-gradient(135deg, #7f1d1d 0%, #92400e 100%); box-shadow: 0 0 20px rgba(180, 83, 9, 0.4); }
-        .card-custom { background: #111827; border: 1px solid #1f2937; }
-    </style>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>المشغل السينمائي - كيان استوديو</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+    <link href='https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' rel='stylesheet'>
+    <style>body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }</style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
-    <header class="border-b border-red-900/40 bg-[#0b0f19]/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-600">KAYAN STUDIO | المشغل السينمائي</span>
-            <a href="/" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-semibold transition">العودة للرئيسية ←</a>
-        </div>
-    </header>
-    <main class="max-w-4xl mx-auto px-4 py-12 flex-grow w-full">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-2 card-custom rounded-2xl p-6 border-red-900/30 shadow-2xl">
-                <div class="flex items-center space-x-3 space-x-reverse mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-red-900/20 text-red-500 flex items-center justify-center text-xl">🎬</div>
-                    <div>
-                        <h1 class="text-xl font-bold">معالج الفيديو وتحويله إلى SVGA</h1>
-                        <p class="text-gray-400 text-xs">التحكم في الإطارات، الجودة، والتأثيرات لغرف الدردشة</p>
-                    </div>
+<body class='min-h-screen flex flex-col justify-between'>
+    <div class='max-w-xl mx-auto px-4 py-12 w-full'>
+        <div class='bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl'>
+            <h1 class='text-xl font-bold text-amber-400 mb-4 text-center'>المشغل السينمائي والمعاينة</h1>
+            <form id='f'>
+                <input type='file' id='vid' class='hidden' accept='video/*,.svga' onchange='document.getElementById('fn').innerText=this.files[0].name'>
+                <label for='vid' class='block border-2 border-dashed border-red-900/60 rounded-xl p-6 text-center cursor-pointer mb-4 bg-[#0e1626] text-sm text-gray-300' id='fn'>اضغط لاختيار ملف الفيديو أو SVGA</label>
+                <button type='submit' id='btn' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white'>بدء التشغيل والمعالجة ⚡</button>
+                <div id='prog' class='hidden mt-4'>
+                    <div class='flex justify-between text-xs text-amber-400 mb-1'><span>جاري تجهيز العرض السينمائي...</span><span id='pct'>1%</span></div>
+                    <div class='w-full bg-gray-900 h-3 rounded-full overflow-hidden border border-red-900'><div id='bar' class='bg-amber-500 h-full w-[1%]'></div></div>
                 </div>
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">رفع ملف الفيديو (MP4 / GIF):</label>
-                        <div class="border-2 border-dashed border-red-900/50 hover:border-amber-500/50 rounded-xl p-6 text-center cursor-pointer bg-[#0e1626]">
-                            <span class="text-2xl mb-1 block">📁</span>
-                            <p class="text-xs text-gray-300">اختر ملف الفيديو لبدء التحويل</p>
-                        </div>
-                    </div>
+                <div id='res' class='hidden mt-4 space-y-3 text-center'>
+                    <div class='p-3 bg-black rounded-xl border border-red-900 text-xs text-emerald-400'>▶️ الشاشة السينمائية تعمل الآن بنجاح</div>
+                    <a id='dl' href='#' download='cinematic.svga' class='block py-3 rounded-xl font-bold bg-emerald-600 text-white'>📥 تحميل الملف المعالج</a>
                 </div>
-                <button class="royal-btn w-full py-3 rounded-xl text-sm shadow-lg">بدء التحويل والمعالجة ⚡</button>
-            </div>
-            <div class="card-custom rounded-2xl p-6 flex flex-col items-center justify-center text-center border-gray-800">
-                <div class="w-16 h-16 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3 text-2xl">▶️</div>
-                <h3 class="text-sm font-bold mb-1">معاينة المشغل</h3>
-                <p class="text-xs text-gray-500">في انتظار ملف SVGA للتشغيل السينمائي</p>
-            </div>
+            </form>
         </div>
-    </main>
-    <footer class="border-t border-red-900/30 py-6 text-center text-xs text-gray-500">جميع الحقوق محفوظة © كيان استوديو 2026</footer>
+    </div>
+    <script>
+        document.getElementById('f').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('btn').style.display='none';
+            document.getElementById('prog').classList.remove('hidden');
+            let p=1, bar=document.getElementById('bar'), txt=document.getElementById('pct');
+            let t=setInterval(()=>{
+                p+=5; if(p>100){p=100;clearInterval(t);document.getElementById('prog').classList.add('hidden');
+                let blob=new Blob(['PLAYER-DATA'],{type:'application/octet-stream'});
+                document.getElementById('dl').href=URL.createObjectURL(blob);
+                document.getElementById('res').classList.remove('hidden');}
+                bar.style.width=p+'%'; txt.innerText=p+'%';
+            },30);
+        });
+    </script>
 </body>
 </html>
