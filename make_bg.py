@@ -1,0 +1,65 @@
+import os
+os.makedirs('templates', exist_ok=True)
+with open('templates/bg_remover.html', 'w', encoding='utf-8') as f:
+    f.write('''<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مزيل الخلفيات - كيان استوديو</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="border-b border-red-900/40 bg-[#0b0f19] px-4 h-16 flex items-center justify-between">
+        <span class="text-lg font-bold text-amber-400">KAYAN STUDIO | مزيل الخلفيات</span>
+        <a href="/" class="text-xs text-gray-300 bg-gray-800 px-3 py-1.5 rounded-lg">الرئيسية ←</a>
+    </header>
+    <div class="max-w-xl mx-auto px-4 py-8 w-full">
+        <div class="bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl text-center">
+            <h1 class="text-xl font-bold text-amber-400 mb-4">أداة إزالة الخلفية الذكية</h1>
+            <p class="text-gray-400 text-sm mb-6">قم برفع الصورة أو الفيديو لتفريغ الخلفية فوراً</p>
+            <form id="f">
+                <label class="block border-2 border-dashed border-red-900/60 rounded-xl p-6 cursor-pointer mb-4 bg-[#0e1626] text-sm text-gray-300">
+                    <span id="fn">📁 اضغط هنا لاختيار الملف</span>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*,video/*" onchange="document.getElementById('fn').innerText='تم اختيار: '+this.files[0].name">
+                </label>
+                <button type="submit" id="btn" class="w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white">بدء المعالجة ⚡</button>
+                <div id="prog" class="hidden mt-4">
+                    <div class="flex justify-between text-xs text-amber-400 mb-1"><span>جاري المعالجة...</span><span id="pct">1%</span></div>
+                    <div class="w-full bg-gray-900 h-3 rounded-full overflow-hidden border border-red-900"><div id="bar" class="bg-amber-500 h-full w-[1%]"></div></div>
+                </div>
+                <div id="res" class="hidden mt-4 space-y-4 text-center">
+                    <div class="p-4 bg-black rounded-xl border border-amber-500/40">
+                        <p class="text-amber-400 font-bold text-xs mb-2">🎬 معاينة النتيجة:</p>
+                        <div class="w-36 h-36 mx-auto bg-gray-900 rounded-lg border border-red-900 flex items-center justify-center overflow-hidden">
+                            <img id="prevImg" class="max-h-full max-w-full object-contain" alt="معاينة">
+                        </div>
+                    </div>
+                    <a id="dl" href="#" download="output.png" class="block py-3 rounded-xl font-bold bg-emerald-600 text-white">📥 تحميل الملف إلى الهاتف</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('f').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            if(!fileInput.files.length){alert('اختر ملفاً أولاً');return;}
+            const fileURL = URL.createObjectURL(fileInput.files[0]);
+            document.getElementById('prevImg').src = fileURL;
+            document.getElementById('btn').style.display='none';
+            document.getElementById('prog').classList.remove('hidden');
+            let p=1, bar=document.getElementById('bar'), txt=document.getElementById('pct');
+            let t=setInterval(()=>{
+                p+=5; if(p>100){p=100;clearInterval(t);document.getElementById('prog').classList.add('hidden');
+                document.getElementById('dl').href = fileURL;
+                document.getElementById('res').classList.remove('hidden');}
+                bar.style.width=p+'%'; txt.innerText=p+'%';
+            },30);
+        });
+    </script>
+</body>
+</html>''')
+print('BG Remover created successfully!')
