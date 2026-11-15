@@ -28,13 +28,13 @@
                 <p class="text-gray-400 text-sm">قم برفع أي صورة (PNG, JPG, WEBP, GIF) ليتم تحويلها ومعالجتها فورا</p>
             </div>
             
-            <form action="/convert" method="POST" enctype="multipart/form-data" id="uploadForm">
-                <div onclick="document.getElementById('fileInput').click()" class="border-2 border-dashed border-gray-700 hover:border-amber-500/50 rounded-2xl p-8 text-center cursor-pointer transition mb-6 bg-[#0e1626]">
+            <form action="/convert" method="POST" enctype="multipart/form-data">
+                <label for="fileInput" class="border-2 border-dashed border-gray-700 hover:border-amber-500/50 rounded-2xl p-8 text-center cursor-pointer transition mb-6 bg-[#0e1626] block">
                     <span class="text-3xl mb-2 block">📁</span>
-                    <p id="fileName" class="text-sm font-semibold text-gray-300">اضغط لاختيار الصور أو اسحبها هنا</p>
-                    <p class="text-xs text-gray-500 mt-1">تدعم كافة الصيغ الشهيرة بجودة عالية</p>
+                    <span id="fileName" class="text-sm font-semibold text-gray-300 block">اضغط لاختيار الصور أو اسحبها هنا</span>
+                    <span class="text-xs text-gray-500 mt-1 block">تدعم كافة الصيغ الشهيرة بجودة عالية</span>
                     <input type="file" name="image" id="fileInput" class="hidden" accept="image/*" onchange="showFileName(this)">
-                </div>
+                </label>
                 <button type="submit" class="gold-btn w-full py-3 rounded-xl text-base shadow-lg cursor-pointer">بدء التحويل الآن ⚡</button>
             </form>
         </div>
