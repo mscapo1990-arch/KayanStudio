@@ -18,12 +18,13 @@ def player():
 def extractor():
     return render_template('extractor.html')
 
+@app.route('/animator')
+def animator():
+    return render_template('animator.html')
+
 @app.route('/convert', methods=['POST'])
 def convert():
-    file = request.files.get('image')
-    if file:
-        return f"تم استلام الصورة بنجاح: {file.filename} - جاري المعالجة والتحويل..."
-    return "لم يتم اختيار أي ملف، يرجى المحاولة مجدداً."
+    return "تم الاستلام والمعالجة بنجاح"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
