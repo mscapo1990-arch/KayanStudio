@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو كيان الذكي - Kayan Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }
+        .gold-btn { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #111827; font-weight: 700; transition: all 0.3s ease; text-align: center; display: block; }
+        .gold-btn:hover { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+        .card-custom { background: #111827; border: 1px solid #1f2937; transition: all 0.3s ease; }
+        .card-custom:hover { border-color: #7c3aed; box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.15); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="border-b border-gray-800 bg-[#0b0f19]/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-500">KAYAN STUDIO</span>
+            <nav class="hidden md:flex space-x-6 space-x-reverse text-sm text-gray-300">
+                <a href="#" class="hover:text-purple-400 transition">الرئيسية</a>
+                <a href="#" class="hover:text-purple-400 transition">المشغل</a>
+                <a href="#" class="hover:text-purple-400 transition">المستخرج</a>
+                <a href="/converter" class="text-amber-400 font-bold">المحول</a>
+            </nav>
+            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">دخول</button>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+        <div class="text-center mb-16">
+            <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight">احترافية كاملة في معالجة ملفات <span class="text-purple-400">SVGA</span></h1>
+            <p class="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">المنصة الأولى والأجدر لاستخراج، تحويل، ومعاينة ملفات الـ SVGA بدقة سينمائية مذهلة.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="card-custom rounded-2xl p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center mb-4 text-xl">🖼️</div>
+                    <h3 class="text-lg font-bold mb-2">تحويل الصور إلى SVGA</h3>
+                    <p class="text-gray-400 text-sm mb-6">اختر صورة أو عدة صور مع تفريغ الخلفية تلقائياً وتحويلها بدقة عالية.</p>
+                </div>
+                <button class="w-full bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white py-2.5 rounded-xl text-sm font-semibold transition border border-purple-500/30">فتح الأداة ←</button>
+            </div>
+            <div class="card-custom rounded-2xl p-6 flex flex-col justify-between border-amber-500/30">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mb-4 text-xl">⚡</div>
+                    <h3 class="text-lg font-bold mb-2">محول صيغ الصور المتعددة</h3>
+                    <p class="text-gray-400 text-sm mb-6">تحويل كافة صيغ الصور (PNG, JPG, WEBP, GIF) إلى SVGA بضغطة واحدة وبدون فقدان الجودة.</p>
+                </div>
+                <a href="/converter" class="gold-btn w-full py-2.5 rounded-xl text-sm shadow-lg">تحويل الآن ←</a>
+            </div>
+            <div class="card-custom rounded-2xl p-6 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mb-4 text-xl">🎬</div>
+                    <h3 class="text-lg font-bold mb-2">معالجة الفيديو والمشغل السينمائي</h3>
+                    <p class="text-gray-400 text-sm mb-6">معاينة ملفات SVGA، التحكم في الإطارات، وتحويل الفيديوهات إلى تأثيرات غرف الدردشة.</p>
+                </div>
+                <button class="w-full bg-indigo-600/20 hover:bg-indigo-600 text-indigo-300 hover:text-white py-2.5 rounded-xl text-sm font-semibold transition border border-indigo-500/30">فتح الأداة ←</button>
+            </div>
+        </div>
+    </main>
+    <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">جميع الحقوق محفوظة © كيان استوديو (Kayan Studio) 2026</footer>
+</body>
+</html>

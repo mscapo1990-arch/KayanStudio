@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>معالجة الفيديو والمشغل السينمائي - استوديو كيان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f3f4f6; }
+        .indigo-btn { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); color: #ffffff; font-weight: 700; transition: all 0.3s ease; }
+        .indigo-btn:hover { background: linear-gradient(135deg, #4f46e5 100%, #3730a3 100%); box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+        .card-custom { background: #111827; border: 1px solid #1f2937; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <header class="border-b border-gray-800 bg-[#0b0f19]/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">KAYAN STUDIO | المشغل السينمائي</span>
+            <a href="/" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-4 py-2 rounded-xl text-sm font-semibold transition">العودة للرئيسية ←</a>
+        </div>
+    </header>
+    <main class="max-w-4xl mx-auto px-4 py-12 flex-grow w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- قسم الإعدادات -->
+            <div class="md:col-span-2 card-custom rounded-2xl p-6 border-indigo-500/30 shadow-2xl">
+                <div class="flex items-center space-x-3 space-x-reverse mb-6">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl">🎬</div>
+                    <div>
+                        <h1 class="text-xl font-bold">معالج الفيديو وتحويله إلى SVGA</h1>
+                        <p class="text-gray-400 text-xs">التحكم في الإطارات، الجودة، والتأثيرات لغرف الدردشة</p>
+                    </div>
+                </div>
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">رفع ملف الفيديو (MP4 / GIF):</label>
+                        <div class="border-2 border-dashed border-gray-700 hover:border-indigo-500/50 rounded-xl p-6 text-center cursor-pointer bg-[#0e1626]">
+                            <span class="text-2xl mb-1 block">📁</span>
+                            <p class="text-xs text-gray-300">اختر ملف الفيديو لبدء التحويل</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">عدد الإطارات (FPS): 16</label>
+                        <input type="range" min="10" max="60" value="16" class="w-full accent-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-400 mb-1">جودة الضغط: 80%</label>
+                        <input type="range" min="10" max="100" value="80" class="w-full accent-indigo-500">
+                    </div>
+                </div>
+                <button class="indigo-btn w-full py-3 rounded-xl text-sm shadow-lg">بدء التحويل والمعالجة ⚡</button>
+            </div>
+            <!-- نافذة المعاينة -->
+            <div class="card-custom rounded-2xl p-6 flex flex-col items-center justify-center text-center border-gray-800">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-600/10 text-indigo-400 flex items-center justify-center mb-3 text-2xl">▶️</div>
+                <h3 class="text-sm font-bold mb-1">معاينة المشغل</h3>
+                <p class="text-xs text-gray-500">في انتظار ملف SVGA للتشغيل السينمائي</p>
+            </div>
+        </div>
+    </main>
+    <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-500">جميع الحقوق محفوظة © كيان استوديو 2026</footer>
+</body>
+</html>
