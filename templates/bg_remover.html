@@ -16,42 +16,58 @@
     <div class='max-w-xl mx-auto px-4 py-8 w-full'>
         <div class='bg-[#111827] border border-red-900/50 rounded-2xl p-6 shadow-xl text-center'>
             <h1 class='text-xl font-bold text-amber-400 mb-2'>مصفاة عزل الخلفية الخضراء (Chroma Key)</h1>
-            <p class='text-gray-400 text-xs mb-6'>ارفع الإطار أو الفيديو الأخضر ليتم تفريغ الخلفية فوراً</p>
-            <input type='file' id='mediaFile' accept='image/*,video/*' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-xs text-gray-300 mb-4'>
-            <button onclick='processChromaKey()' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg mb-4'>تفريغ الخلفية الخضراء ⚡</button>
+            <p class='text-gray-400 text-xs mb-6'>ارفع الإطار الأخضر ليتم تفريغ الخلفية الخضراء تماماً وتحويلها لشفافة</p>
+            <input type='file' id='mediaFile' accept='image/*' class='w-full bg-[#0e1626] border border-red-900/50 rounded-xl p-3 text-xs text-gray-300 mb-4'>
+            <button onclick='removeGreenBackground()' class='w-full py-3 rounded-xl font-bold bg-gradient-to-r from-red-800 to-amber-600 text-white shadow-lg mb-4'>تفريغ الخلفية الخضراء بذكاء ⚡</button>
             
             <div id='resultArea' class='hidden mt-4 p-4 bg-black rounded-xl border border-amber-500/40'>
-                <p class='text-amber-400 font-bold text-xs mb-2'>✨ النتيجة بعد التفريغ (شفاة/Transparent):</p>
+                <p class='text-amber-400 font-bold text-xs mb-2'>✨ النتيجة بعد تفريغ الخلفية (Transparent):</p>
                 <div id='previewBox' class='w-64 h-64 mx-auto bg-[linear-gradient(45deg,#222_25%,transparent_25%),linear-gradient(-45deg,#222_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#222_75%),linear-gradient(-45deg,transparent_75%,#222_75%)] bg-[size:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0px] rounded-xl border-2 border-amber-500 flex items-center justify-center relative overflow-hidden'>
+                    <canvas id='outputCanvas' class='max-w-full max-h-full object-contain'></canvas>
                 </div>
-                <a id='downloadLink' href='#' download='transparent_asset.png' class='block mt-4 py-2.5 rounded-xl font-bold bg-emerald-600 text-white text-xs shadow-lg'>📥 تحميل الملف المفرغ</a>
+                <a id='downloadLink' href='#' download='transparent_frame.png' class='block mt-4 py-2.5 rounded-xl font-bold bg-emerald-600 text-white text-xs shadow-lg'>📥 تحميل الإطار المفرغ بدقة عالية</a>
             </div>
         </div>
     </div>
     <script>
-        function processChromaKey() {
+        function removeGreenBackground() {
             const input = document.getElementById('mediaFile');
             const file = input.files[0];
-            const url = URL.createObjectURL(file);
-            const box = document.getElementById('previewBox');
-            box.innerHTML = '';
-
-            if(file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = url;
-                img.className = 'max-w-full max-h-full object-contain';
-                box.appendChild(img);
-            } else {
-                const vid = document.createElement('video');
-                vid.src = url;
-                vid.controls = true;
-                vid.autoplay = true;
-                vid.loop = true;
-                vid.className = 'max-w-full max-h-full object-contain';
-                box.appendChild(vid);
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById('outputCanvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    
+                    ctx.drawImage(img, 0, 0);
+                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imgData.data;
+                    
+                    // خوارزمية عزل اللون الأخضر الحقيقية (Chroma Key Engine)
+                    for (let i = 0; i < data.length; i += 4) {
+                        let red = data[i];
+                        let green = data[i + 1];
+                        let blue = data[i + 2];
+                        
+                        // إذا كان اللون الأخضر طاغياً بوضوح
+                        if (green > 80 && green > red + 30 && green > blue + 30) {
+                            data[i + 3] = 0; // جعل البكسل شفافاً تماماً
+                        }
+                    }
+                    
+                    ctx.putImageData(imgData, 0, 0);
+                    
+                    document.getElementById('resultArea').classList.remove('hidden');
+                    const dataUrl = canvas.toDataURL('image/png');
+                    document.getElementById('downloadLink').href = dataUrl;
+                }
+                img.src = event.target.result;
             }
-            document.getElementById('downloadLink').href = url;
-            document.getElementById('resultArea').classList.remove('hidden');
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
