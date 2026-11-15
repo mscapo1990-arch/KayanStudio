@@ -14,5 +14,9 @@ def converter():
 def player():
     return render_template('player.html')
 
+@app.route('/extractor')
+def extractor():
+    return render_template('extractor.html')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
